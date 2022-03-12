@@ -18,20 +18,6 @@ def broadcast(message):
 	for client in clients:
 		client.send(message)
 
-def kick_user(user):
-    if user in nicknames:
-        index_to_kick = nicknames.index(user)
-        client_to_kick = clients[index_to_kick]
-        clients.remove(client_to_kick)
-        client_to_kick.send("You have been kicked by an admin!".encode("UTF-8"))
-        client_to_kick.close()
-        nicknames.remove(user)
-        broadcast(f"{user} was kicked by an admin!".encode("UTF-8"))
-        
-        
-
-
-
 
 def handle(client):
 	while True:
@@ -42,18 +28,19 @@ def handle(client):
 			    if nicknames[clients.index(client)] == "admin":
 			        name_to_kick = mesg.decode("UTF-8")[5:]
 			        kick_user(name_to_kick)
+				print(f"{name_to_kick} was kicked!")
 			    
 			    else: client.send("Commands can be excuted only by admins!".encode("UTF-8"))
 			    
 			elif mesg.decode("UTF-8").startswith("BAN"):
-		        if nicknames[clients.index(client)] == "admin":
-		            name_to_ban = mesg.decode("UTF-8")[4:]
+		        	if nicknames[clients.index(client)] == "admin":
+		        		name_to_ban = mesg.decode("UTF-8")[4:]
 					kick_user(name_to_ban)
 					with open("bans.txt","a") as f:
-                        f.write(f"{name_to_ban}\n")
-            		print(f"{name_to_ban} was banned!")
+                        			f.write(f"{name_to_ban}\n")
+            				print(f"{name_to_ban} was banned!")
 
-                else:
+                		else:
 					client.send("Commands can be excuted only by admins!".encode("UTF-8"))
                       
 			else:
@@ -66,6 +53,7 @@ def handle(client):
 			nicknames.remove(nicknames[index])
 			break
 
+			
 def receive():
 	while True:
 		client , addr = server.accept()
@@ -78,7 +66,7 @@ def receive():
 		    bans = f.readlines()
 
 		if nickname + "\n" in bans:
-		    client.send("BAN".encode("UTF-8"))
+			client.send("BAN".encode("UTF-8"))
 			client.close()
 			continue
 
@@ -101,5 +89,16 @@ def receive():
 		thread = threading.Thread(target=handle, args=(client,))
 		thread.start()
 
+		
+def kick_user(user):
+    if user in nicknames:
+        index_to_kick = nicknames.index(user)
+        client_to_kick = clients[index_to_kick]
+        clients.remove(client_to_kick)
+        client_to_kick.send("You have been kicked by an admin!".encode("UTF-8"))
+        client_to_kick.close()
+        nicknames.remove(user)
+        broadcast(f"{user} was kicked by an admin!".encode("UTF-8"))
+        
 
 receive()
