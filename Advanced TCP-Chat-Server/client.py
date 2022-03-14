@@ -1,12 +1,13 @@
 import socket
 import threading
+from getpass import getpass
 
 client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client.connect(("127.0.0.1",5555))
 
 nickname = input("Choose a nickname: ")
 if nickname == "admin":
-	password = input("Enter the admin's password: ")
+	password = getpass("Enter the admin's password: ")
 
 stop = False
 
