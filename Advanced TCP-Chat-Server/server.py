@@ -32,7 +32,7 @@ def handle(client):
                         print(f"{name_to_kick} was kicked!")
 
                     else:
-                        client.send(f"The name you entered is not in the room!".encode("UTF-8"))
+                        client.send("The name you entered is not in the room!".encode("UTF-8"))
 
                 else:
                     client.send("Commands can be only excuted by the admin!".encode("UTF-8"))
@@ -49,10 +49,27 @@ def handle(client):
                         print(f"{name_to_ban} was banned!")
 
                     else:
-                        client.send(f"The name you entered is not in the room!".encode("UTF-8"))
+                        client.send("The name you entered is not in the room!".encode("UTF-8"))
 
                 else:
                     client.send("Commands can be only excuted by the admin!".encode("UTF-8"))
+
+            elif msg.decode("UTF-8").startswith("CLEAR"):
+                if nicknames[clients.index(client)] == "admin":
+                    with open("bans.txt","w") as f:
+                        f.write("")
+                    print("The bans list was cleared by the admin!")
+                    client.send("The bans list was cleared successfully!".encode("UTF-8"))
+                else:
+                    client.send("Commands can be only excuted by the admin!".encode("UTF-8"))
+
+            elif msg.decode("UTF-8").startswith("QUIT"):
+                user_left = nicknames[clients.index(client)]
+                nicknames.remove(user_left)
+                clients.remove(client)
+                client.close()
+                broadcast(f"{user_left} left the chat!".encode("UTF-8"))
+                print(f"{user_left} left the chat!")
 
             else:
                 broadcast(msg)
@@ -84,7 +101,7 @@ def receive():
             client.close()
             continue
 
-        elif nickname == "admin":
+        if nickname == "admin":
             client.send("PASS".encode("UTF-8"))
             password = client.recv(1024).decode("UTF-8")
 
