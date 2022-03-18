@@ -25,8 +25,6 @@ print("\nCopyright of Yousif Gad, 2022\n")
 print("*" * 50)
 
 
-open_ports = []
-
 while True:
     ip_input = input("\nEnter the IP you want to scan: ")
     if ipv4_pattern.search(ip_input):
@@ -53,12 +51,4 @@ for port in range(min_port_scan , max_port_scan + 1):
         if r:
             pass
         else:
-            open_ports.append(port)
-
-
-if open_ports:
-    for port in open_ports:
-        print(f"Port {port} is open")
-
-else:
-    print("No ports are open")
+            print(f"Port {port} is open")
